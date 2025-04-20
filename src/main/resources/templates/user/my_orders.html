@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::Layout(~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+
+        .message-box {
+            padding: 10px;
+            margin: 10px 0;
+            color: white;
+            background-color: green;  /* You can change color based on success or error */
+            border-radius: 5px;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 2s ease-out; /* Fades out in 2 seconds */
+        }
+    </style>
+</head>
+<body>
+<section>
+  <div class="container mt-5 p-5">
+    <div class="row">
+      <a href="/" class="text-decoration-none"><i class="fa-solid fa-arrow-left" ></i> Back</a>
+      <hr>
+      <p class="text-center fs-3">My Orders</p>
+      <div class="card-header text-center">
+        <p class="fs-4">Cart Page</p>
+        <div th:if="${session.succMsg}" class="message-box" id="successMessage">
+          <p class="text-success fw-bold" th:text="${session.succMsg}"></p>
+          <th:block th:if="${@commonServiceImpl.removeSessionMessage()}"></th:block> <!-- Just invoke the method -->
+        </div>
+
+        <!-- Error message -->
+        <div th:if="${session.errorMsg}" class="message-box" style="background-color:red;" id="errorMessage">
+          <p class="text-danger fw-bold" th:text="${session.errorMsg}"></p>
+          <th:block th:if="${@commonServiceImpl.removeSessionMessage()}"></th:block> <!-- Just invoke the method -->
+        </div>
+      </div>
+      <div class="col-md-12 ">
+
+        <table class="table table-bordered card-sh">
+          <thead >
+          <tr >
+            <th scope="col">Order Id</th>
+            <th scope="col">Date</th>
+            <th scope="col">Product Details</th>
+            <th scope="col">Price</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="o:${orders}">
+            <th scope="row">[[${o.orderId}]]</th>
+            <td>[[${o.orderDate}]]</td>
+            <td>[[${o.productTitle}]]</td>
+            <td>Quantity : [[${o.quantity}]] <br>Price :
+              [[${o.price}]] <br>Total Price :[[${o.quantity *
+              o.price}]]
+            </td>
+            <td>[[${o.status}]]</td>
+            <td><th:block th:if="${o.status!='Cancelled'}">
+              <a th:href="@{'/user/update-status?id='+${o.id}+'&st=6' }"
+                 class="btn btn-sm btn-danger">Cancel</a>
+            </th:block> <th:block th:unless="${o.status!='Cancelled'}">
+              <a href="#" class="btn btn-sm btn-danger disabled" >Cancel</a>
+            </th:block></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <script>
+setTimeout(function() {
+
+const successMessage = document.getElementById('successMessage');
+const errorMessage = document.getElementById('errorMessage');
+console.log(successMessage);
+if (successMessage) {
+successMessage.style.opacity = '0';  // Fade out the success message
+}
+if (errorMessage) {
+errorMessage.style.opacity = '0';  // Fade out the error message
+}
+}, 2000);  // Time in milliseconds (5000 ms = 5 seconds)
+</script>
+</section>
+</body>
+</html>

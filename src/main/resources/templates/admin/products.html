@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::Layout(~{::section})}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        .message-box {
+            padding: 10px;
+            margin: 10px 0;
+            color: white;
+            background-color: green;  /* You can change color based on success or error */
+            border-radius: 5px;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 2s ease-out; /* Fades out in 2 seconds */
+        }
+    </style>
+</head>
+<body>
+<section>
+
+
+    <div class="container mt-5 p-5">
+        <a href="/admin/" class="text-decoration-none"><i class="fa-solid fa-arrow-left" ></i> Back</a>
+        <hr>
+        <div class="card card-sh">
+            <div class="card-header text-center">
+                <p class="fs-4">View Products</p>
+
+                <!-- Success message -->
+                <div th:if="${session.succMsg}" class="message-box" id="successMessage">
+                    <p class="text-success fw-bold" th:text="${session.succMsg}"></p>
+                    <th:block th:if="${@commonServiceImpl.removeSessionMessage()}"></th:block> <!-- Just invoke the method -->
+                </div>
+
+                <!-- Error message -->
+                <div th:if="${session.errorMsg}" class="message-box" style="background-color:red;" id="errorMessage">
+                    <p class="text-danger fw-bold" th:text="${session.errorMsg}"></p>
+                    <th:block th:if="${@commonServiceImpl.removeSessionMessage()}"></th:block> <!-- Just invoke the method -->
+                </div>
+
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Sl No</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Discount</th>
+                        <th scope="col">Discount Price</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p,c:${products}">
+                        <th scope="row">[[${c.count}]]</th>
+                        <td><img th:src="${p.image}" width="70px" height="70px"></td>
+                        <td>[[${p.title}]]</td>
+                        <td>[[${p.category}]]</td>
+                        <td>[[${p.price}]]</td>
+                        <td>[[${p.discount}]]</td>
+                        <td>[[${p.discountPrice}]]</td>
+                        <td>[[${p.isActive}]]</td>
+                        <td>[[${p.stock}]]</td>
+                        <td>
+                            <a th:href="@{'/admin/editProduct/'+${p.id}}" class="btn btn-sm btn-primary">
+                                <i class="fa-solid fa-pen-to-square"></i>Edit
+                            </a>
+
+                            <a th:href="@{'/admin/deleteProduct/'+${p.id}}" class="btn btn-sm btn-danger">
+                                <i class="fa-solid fa-trash"></i>Delete
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+setTimeout(function() {
+
+const successMessage = document.getElementById('successMessage');
+const errorMessage = document.getElementById('errorMessage');
+console.log(successMessage);
+if (successMessage) {
+successMessage.style.opacity = '0';  // Fade out the success message
+}
+if (errorMessage) {
+errorMessage.style.opacity = '0';  // Fade out the error message
+}
+}, 2000);  // Time in milliseconds (5000 ms = 5 seconds)
+</script>
+
+</section>
+
+
+
+</body>
+</html>
