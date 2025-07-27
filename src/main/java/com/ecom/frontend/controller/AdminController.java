@@ -1,5 +1,6 @@
 package com.ecom.frontend.controller;
 
+import com.cloudinary.Cloudinary;
 import com.ecom.frontend.model.Category;
 import com.ecom.frontend.model.Product;
 import com.ecom.frontend.model.ProductOrder;
@@ -12,6 +13,7 @@ import com.ecom.frontend.service.impl.OrderServiceImpl;
 import com.ecom.frontend.service.impl.ProductService;
 import com.ecom.frontend.service.impl.UserServiceImpl;
 import com.ecom.frontend.util.BucketType;
+import com.ecom.frontend.util.CloudinaryResponse;
 import com.ecom.frontend.util.CommonUtil;
 import com.ecom.frontend.util.OrderStatus;
 import jakarta.servlet.http.HttpSession;
@@ -52,18 +54,20 @@ public class AdminController {
 
     @Autowired
      private OrderServiceImpl orderService;
+   @Autowired
+    Cloudinary cloudinary;
 
     @Autowired
     private FileService fileService;
 
-    @Autowired
-    private CommonUtil commonUtil;
+//    @Autowired
+//    private CommonUtil commonUtil;
 
 
 
 
 
-
+@Autowired
 private PasswordEncoder passwordEncoder;
     @ModelAttribute
     public void getUserDetails(Principal p, Model m) {
@@ -123,12 +127,14 @@ private PasswordEncoder passwordEncoder;
 
         System.out.println("saved");
 // String imageName=file !=null?file.getOriginalFilename():"default.jpg";
-        String imageUrl = commonUtil.getImageUrl(file, BucketType.CATEGORY.getId());
+        CloudinaryResponse response = fileService.uploadFile(file, 1);
+        String imageUrl = response.getUrl();
     categoryModel.setImageName(imageUrl);
         Boolean isSaved = commonService.saveCategory(categoryModel, file);
 
         if (!isSaved) {
             System.out.println("Not saved");
+            cloudinary.uploader().destroy(response.getId(), com.cloudinary.utils.ObjectUtils.emptyMap());
             session.setAttribute("errorMsg", "CategoryService not saved");
         } else {
             System.out.println("saved" + " " + isSaved);
@@ -141,7 +147,7 @@ private PasswordEncoder passwordEncoder;
 //            System.out.println(path);
 //            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-            fileService.uploadFileS3(file,1);
+//            fileService.uploadFileS3(file,1);
 
 
 
@@ -176,7 +182,9 @@ private PasswordEncoder passwordEncoder;
         Category oldcategory = commonService.getCategory(category.getId());
 
 //        String imageName = (file.isEmpty() ? oldcategory.getImageName() : file.getOriginalFilename());
-        String imageUrl = commonUtil.getImageUrl(file, BucketType.CATEGORY.getId());
+        CloudinaryResponse response = fileService.uploadFile(file, 1);
+        String imageUrl = response.getUrl();
+//        String imageUrl = commonUtil.getImageUrl(file, BucketType.CATEGORY.getId());
 
         if (category != null) {
             String category1= category.getName().replace(" ","");
@@ -193,7 +201,7 @@ private PasswordEncoder passwordEncoder;
 //
 //                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
 //                        + file.getOriginalFilename());
-                fileService.uploadFileS3(file,1);
+//                fileService.uploadFileS3(file,1);
 
 
 
@@ -201,6 +209,7 @@ private PasswordEncoder passwordEncoder;
             }
 
         } else {
+            cloudinary.uploader().destroy(response.getId(), com.cloudinary.utils.ObjectUtils.emptyMap());
             session.setAttribute("errorMsg", "Name already Present");
             return "redirect:/admin/category";
         }
@@ -218,7 +227,8 @@ private PasswordEncoder passwordEncoder;
 //
 //        System.out.println(product.getCategory());
 //        String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
-        String imageUrl = commonUtil.getImageUrl(image, BucketType.CATEGORY.getId());
+        CloudinaryResponse response = fileService.uploadFile(image, 2);
+        String imageUrl = response.getUrl();
 
         product.setImage(imageUrl);
         product.setDiscount(0);
@@ -235,11 +245,12 @@ private PasswordEncoder passwordEncoder;
 //
 ////            System.out.println(path);
 //            Files.copy(image.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-            fileService.uploadFileS3(image,BucketType.Product.getId());
+//            fileService.uploadFileS3(image,BucketType.Product.getId());
 
 
             session.setAttribute("succMsg", "Product Saved Success");
         } else {
+            cloudinary.uploader().destroy(response.getId(), com.cloudinary.utils.ObjectUtils.emptyMap());
             session.setAttribute("errorMsg", "something wrong on server");
         }
 
@@ -286,11 +297,15 @@ private PasswordEncoder passwordEncoder;
                                 HttpSession session, Model m) throws IOException {
 
         System.out.println(product.getIsActive());
+
         if(product.getDiscount()<0 || product.getDiscount()>100){
             session.setAttribute("errorMsg", "invalid Discount");
         }
         else {
+            CloudinaryResponse response = fileService.uploadFile(image, 2);
+            String imageUrl = response.getUrl();
 
+            product.setImage(imageUrl);
         Boolean isUpdated = productService.updateProduct(product,image);
 
         String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
@@ -306,7 +321,7 @@ private PasswordEncoder passwordEncoder;
 
                 try {
 //
-                    fileService.uploadFileS3(image,BucketType.Product.getId());
+//                    fileService.uploadFileS3(image,BucketType.Product.getId());
 
 
                 } catch (Exception e) {
@@ -318,6 +333,7 @@ private PasswordEncoder passwordEncoder;
 
             }
         } else {
+            cloudinary.uploader().destroy(response.getId(), com.cloudinary.utils.ObjectUtils.emptyMap());
             session.setAttribute("errorMsg", "something wrong on server");
         }
         }
@@ -393,18 +409,21 @@ private PasswordEncoder passwordEncoder;
             throws IOException {
 
 //        String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
-        String imageUrl = commonUtil.getImageUrl(file, BucketType.Profile.getId());
+        CloudinaryResponse response = fileService.uploadFile(file, 3);
+        String imageUrl = response.getUrl();
+//        String imageUrl = commonUtil.getImageUrl(file, BucketType.Profile.getId());
 
         user.setProfileImage(imageUrl);
         UserDtls saveUser = userService.saveAdmin(user);
 
         if (!ObjectUtils.isEmpty(saveUser)) {
             if (!file.isEmpty()) {
-                fileService.uploadFileS3(file,BucketType.Profile.getId());
+//                fileService.uploadFileS3(file,BucketType.Profile.getId());
 
             }
             session.setAttribute("succMsg", "Register successfully");
         } else {
+            cloudinary.uploader().destroy(response.getId(), com.cloudinary.utils.ObjectUtils.emptyMap());
             session.setAttribute("errorMsg", "something wrong on server");
         }
 

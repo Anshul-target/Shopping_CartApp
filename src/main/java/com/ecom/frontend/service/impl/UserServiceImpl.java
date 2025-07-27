@@ -1,11 +1,13 @@
 package com.ecom.frontend.service.impl;
 
+import com.cloudinary.Cloudinary;
 import com.ecom.frontend.model.UserDtls;
 import com.ecom.frontend.repository.UserRepository;
 import com.ecom.frontend.service.FileService;
 import com.ecom.frontend.service.UserService;
 import com.ecom.frontend.util.AppConstant;
 import com.ecom.frontend.util.BucketType;
+import com.ecom.frontend.util.CloudinaryResponse;
 import com.ecom.frontend.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -35,12 +37,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private FileService fileService;
     @Autowired
-    private CommonUtil commonUtil;
+  private Cloudinary cloudinary;
 
     @Override
     public UserDtls saveUser(UserDtls user) {
 
-        user.setRole("ROLE_ADMIN");
+        user.setRole("ROLE_USER");
         user.setIsEnable(true);
         user.setAccountNonLocked(true);
         user.setFailedAttempt(0);
@@ -138,9 +140,18 @@ public class UserServiceImpl implements UserService {
         UserDtls dbUser = userRepository.findById(user.getId()).get();
 
         if (!img.isEmpty()) {
-            String imageUrl = commonUtil.getImageUrl(img, BucketType.Profile.getId());
+            try {
+                CloudinaryResponse response = fileService.uploadFile(img, 3);
+                String imageUrl = response.getUrl();
+                dbUser.setProfileImage(imageUrl);
+            }
+            catch (Exception e){
+//
+                System.out.println(e.getMessage());
+//                cloudinary.uploader().destroy(response.getId(), com.cloudinary.utils.ObjectUtils.emptyMap());
+            }
 
-            dbUser.setProfileImage(imageUrl);
+
         }
 
         if (!ObjectUtils.isEmpty(dbUser)) {
@@ -154,14 +165,7 @@ public class UserServiceImpl implements UserService {
             dbUser = userRepository.save(dbUser);
         }
 
-        try {
-            if (!img.isEmpty()) {
-                fileService.uploadFileS3(img,BucketType.Profile.getId());
 
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
 
         return dbUser;
     }

@@ -5,6 +5,7 @@ import com.ecom.frontend.model.PageDetails;
 import com.ecom.frontend.model.Product;
 import com.ecom.frontend.service.ProductInterface;
 import com.ecom.frontend.util.BucketType;
+import com.ecom.frontend.util.CloudinaryResponse;
 import com.ecom.frontend.util.CommonUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,7 +37,7 @@ RestTemplate restTemplate;
     private CommonUtil commonUtil;
     @Override
     public Boolean saveProduct(Product product) {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/saveProduct";
+        String url = "http://localhost:8082/api/admin/saveProduct";
 
 
         // Prepare form data for sending
@@ -67,7 +68,7 @@ RestTemplate restTemplate;
 
     @Override
     public List<Product> getAllProducts() {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/products";
+        String url = "http://localhost:8082/api/admin/products";
 
         ResponseEntity<List<Product>> responseEntity = restTemplate.exchange(
                 url,
@@ -81,7 +82,7 @@ RestTemplate restTemplate;
 
     @Override
     public Boolean deleteProduct(String id) {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/deleteProduct/{id}";
+        String url = "http://localhost:8082/api/admin/deleteProduct/{id}";
 
         ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
                 url,
@@ -97,7 +98,7 @@ RestTemplate restTemplate;
 
     @Override
     public Product getProductById(String id) {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/editProduct/{id}";
+        String url = "http://localhost:8082/api/admin/editProduct/{id}";
 
         ResponseEntity<Product> responseEntity = restTemplate.exchange(
                 url,
@@ -111,11 +112,10 @@ RestTemplate restTemplate;
 
     @Override
     public Boolean updateProduct(Product product,MultipartFile file) throws IOException {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/updateProduct";
+        String url = "http://localhost:8082/api/admin/updateProduct";
 
-        String imageUrl = commonUtil.getImageUrl(file, BucketType.Product.getId());
+//        String imageUrl = commonUtil.getImageUrl(file, BucketType.Product.getId());
 
-  product.setImage(imageUrl);
         MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
         formData.add("id", product.getId());
         formData.add("title", product.getTitle());
@@ -171,7 +171,7 @@ RestTemplate restTemplate;
     }
 
     public List<Product> getAllActiveProducts1(String category) {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/getAllActiveproducts1";
+        String url = "http://localhost:8082/api/admin/getAllActiveproducts1";
         // Construct the URL with the query parameter
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("categoryName", category);
@@ -189,7 +189,7 @@ RestTemplate restTemplate;
     }
     @Override
     public List<Product> getAllActiveProducts(String category,Integer pageNo,Integer pageSize) {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/getAllActiveproducts";
+        String url = "http://localhost:8082/api/admin/getAllActiveproducts";
         // Construct the URL with the query parameter
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("categoryName", category)
@@ -210,7 +210,7 @@ RestTemplate restTemplate;
 
 
     public PageDetails getPageDetails(String category, Integer pageNo, Integer pageSize) {
-        String baseUrl = "https://productcatalog-production.up.railway.app/api/admin/getPageDetails";
+        String baseUrl = "http://localhost:8082/api/admin/getPageDetails";
 
         // Construct URL with parameters
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)

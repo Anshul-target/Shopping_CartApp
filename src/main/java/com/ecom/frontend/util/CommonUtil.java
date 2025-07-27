@@ -18,12 +18,7 @@ import java.io.UnsupportedEncodingException;
 @Component
 public class CommonUtil {
 
-    @Value("${aws.s3.bucket.category}")
-    private String categoryBucket;
-    @Value("${aws.s3.bucket.product}")
-    private String productBucket;
-    @Value("${aws.s3.bucket.profile}")
-    private  String profileBucket;
+
 
     @Autowired
     private JavaMailSender mailSender;
@@ -86,20 +81,6 @@ public class CommonUtil {
     }
 
 
-    public  String getImageUrl(MultipartFile file, Integer bucketType) {
-        String bucketName = null;
 
-        if (bucketType == 1) {
-            bucketName = categoryBucket;
-        } else if (bucketType == 2) {
-            bucketName = productBucket;
-
-        } else {
-            bucketName = profileBucket;
-        }
-        String imageName=file !=null?file.getOriginalFilename():"default.jpg";
-        String url="https://"+bucketName+".s3.amazonaws.com/"+imageName;
-        return url;
-    }
 
 }

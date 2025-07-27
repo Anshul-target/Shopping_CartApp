@@ -25,7 +25,7 @@ public class CartServiceImpl implements CartService {
     ProductService productService;
     @Override
     public Boolean saveCart(Product product, UserDtls user) {
- String url="https://cartservice-production.up.railway.app/api1/addCart";
+ String url="http://localhost:8081/api1/addCart";
         CartRequest_DTO cartRequestDto=new CartRequest_DTO(product,user);
         ResponseEntity<Boolean> response = restTemplate.postForEntity(url,
                 cartRequestDto,
@@ -36,7 +36,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<Cart> getCartsByUser(Integer userId) {
-        String url="https://cartservice-production.up.railway.app/api1/getCart?userId={userId}";
+        String url="http://localhost:8081/api1/getCart?userId={userId}";
         Map<String, Integer> uriVariables = Map.of("userId", userId);
         ResponseEntity<Cart[]> response = restTemplate.exchange(
                 url,
@@ -76,7 +76,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Integer getCountCart(Integer userId) {
-String url="https://cartservice-production.up.railway.app/api1/countProduct?userId={userId}";
+String url="http://localhost:8081/api1/countProduct?userId={userId}";
         Map<String, Integer> uriVariables = Map.of("userId", userId);
         ResponseEntity<Integer> response = restTemplate.exchange(
                 url,
@@ -96,7 +96,7 @@ String url="https://cartservice-production.up.railway.app/api1/countProduct?user
     @Override
     public void updateQuantity(String sy, String cid) {
 
-        String url = "https://cartservice-production.up.railway.app/api1/cartQuantityUpdate?sy={sy}&cid={cid}";
+        String url = "http://localhost:8081/api1/cartQuantityUpdate?sy={sy}&cid={cid}";
         Map<String, String> uriVariables = Map.of("sy", sy, "cid", cid); // Include both "sy" and "cid"
 
         ResponseEntity<Boolean> response = restTemplate.exchange(

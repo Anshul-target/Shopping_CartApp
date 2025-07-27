@@ -9,6 +9,7 @@ import com.ecom.frontend.service.impl.CommonServiceImpl;
 import com.ecom.frontend.service.impl.ProductService;
 import com.ecom.frontend.service.impl.UserServiceImpl;
 import com.ecom.frontend.util.BucketType;
+import com.ecom.frontend.util.CloudinaryResponse;
 import com.ecom.frontend.util.CommonUtil;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -129,10 +130,16 @@ private FileService fileService;
     @PostMapping("/saveUser")
     public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file, HttpSession session)
             throws IOException {
+        if (!file.isEmpty()) {
 
-        String imageUrl = commonUtil.getImageUrl(file, BucketType.Profile.getId());
+            CloudinaryResponse response = fileService.uploadFile(file, 3);
+            String imageUrl = response.getUrl();
+            user.setProfileImage(imageUrl);
+//                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        }
 
-        user.setProfileImage(imageUrl);
+
+
         UserDtls userExist=userService.getUserByEmail(user.getEmail());
         if (userExist!=null){
             session.setAttribute("errorMsg", "user exist!!!");
@@ -144,15 +151,11 @@ private FileService fileService;
             session.setAttribute("errorMsg", "password donot matched");
             return "redirect:/register";
         }
+
         UserDtls saveUser = userService.saveUser(user);
 
         if (!ObjectUtils.isEmpty(saveUser)) {
-            if (!file.isEmpty()) {
 
-                fileService.uploadFileS3(file,BucketType.Profile.getId());
-
-//                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-            }
             session.setAttribute("succMsg", "Register successfully");
         } else {
             session.setAttribute("errorMsg", "something wrong on server");

@@ -18,6 +18,7 @@ public class UserDtls {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     private String name;
