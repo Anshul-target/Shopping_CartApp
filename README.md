@@ -36,7 +36,7 @@ A microservices-based e-commerce application built with **Spring Boot** and **Sp
 - Service registration and discovery
 - Routing and filtering via API Gateway
 - Centralized configuration with Config Server
-- Polyglot persistence (SQL + NoSQL)
+-  (SQL + NoSQL)
 - Basic authentication and separate access for admin and users
 - Admin dashboard for CRUD management of products
 
@@ -47,7 +47,6 @@ A microservices-based e-commerce application built with **Spring Boot** and **Sp
 ### Prerequisites
 
 - Java 17+
-- Docker (optional)
 - MySQL & MongoDB instances
 - Git & Maven
 
