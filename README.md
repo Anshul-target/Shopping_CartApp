@@ -6,12 +6,11 @@ A microservices-based e-commerce application built with **Spring Boot** and **Sp
 
 ## 🚀 Architecture
 
-- **Product Catalog Service** – Manages product data (MySQL)
-- **Cart Service** – Handles users’ shopping carts (MongoDB)
-- **Admin Dashboard** – Interface for product/category management
+- **Product Catalog Service** – Manages product data (MongoDB)    https://github.com/Anshul-target/ProductCatalog
+- **Cart Service** – Handles users’ shopping carts (MongoDB)    https://github.com/Anshul-target/CartService
 - **API Gateway** – Routes and secures all incoming requests
-- **Eureka Discovery Server** – Manages dynamic service registration
-- **Spring Cloud Config Server** – Centralized configuration management
+- **Eureka Discovery Server** – Manages dynamic service registration https://github.com/Anshul-target/Eureka-Server
+- **Spring Cloud Config Server** – Centralized configuration management  https://github.com/Anshul-target/application-config
 - **Frontend App** – Entry point coordinating backend services
 
 ---
