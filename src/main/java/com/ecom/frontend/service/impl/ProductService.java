@@ -37,7 +37,7 @@ RestTemplate restTemplate;
     private CommonUtil commonUtil;
     @Override
     public Boolean saveProduct(Product product) {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/saveProduct";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/saveProduct";
 
 
         // Prepare form data for sending
@@ -68,7 +68,7 @@ RestTemplate restTemplate;
 
     @Override
     public List<Product> getAllProducts() {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/products";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/products";
 
         ResponseEntity<List<Product>> responseEntity = restTemplate.exchange(
                 url,
@@ -82,7 +82,7 @@ RestTemplate restTemplate;
 
     @Override
     public Boolean deleteProduct(String id) {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/deleteProduct/{id}";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/deleteProduct/{id}";
 
         ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
                 url,
@@ -98,7 +98,7 @@ RestTemplate restTemplate;
 
     @Override
     public Product getProductById(String id) {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/editProduct/{id}";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/editProduct/{id}";
 
         ResponseEntity<Product> responseEntity = restTemplate.exchange(
                 url,
@@ -112,7 +112,7 @@ RestTemplate restTemplate;
 
     @Override
     public Boolean updateProduct(Product product,MultipartFile file) throws IOException {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/updateProduct";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/updateProduct";
 
 //        String imageUrl = commonUtil.getImageUrl(file, BucketType.Product.getId());
 
@@ -171,7 +171,7 @@ RestTemplate restTemplate;
     }
 
     public List<Product> getAllActiveProducts1(String category) {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/getAllActiveproducts1";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/getAllActiveproducts1";
         // Construct the URL with the query parameter
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("categoryName", category);
@@ -189,7 +189,7 @@ RestTemplate restTemplate;
     }
     @Override
     public List<Product> getAllActiveProducts(String category,Integer pageNo,Integer pageSize) {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/getAllActiveproducts";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/getAllActiveproducts";
         // Construct the URL with the query parameter
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("categoryName", category)
@@ -210,10 +210,10 @@ RestTemplate restTemplate;
 
 
     public PageDetails getPageDetails(String category, Integer pageNo, Integer pageSize) {
-        String baseUrl = "https://productcatalog-production.up.railway.app/api/admin/getPageDetails";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/getPageDetails";
 
         // Construct URL with parameters
-        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("categoryName", category)
                 .queryParam("pageNo", pageNo)
                 .queryParam("pageSize", pageSize);

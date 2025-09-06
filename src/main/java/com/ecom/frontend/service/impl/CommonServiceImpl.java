@@ -40,7 +40,7 @@ public class CommonServiceImpl implements CommonService {
     public List<Category> getAllCategory() {
 
 //      https://productcatalog-production.up.railway.app/api/admin/saveCategory
-        String url = "https://productcatalog-production.up.railway.app/api/admin/getAllCategory";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/getAllCategory";
 
         // Use ParameterizedTypeReference to capture the response as List<Category>
         ResponseEntity<List<Category>> responseEntity = restTemplate.exchange(
@@ -59,7 +59,7 @@ public class CommonServiceImpl implements CommonService {
 
 
     public Boolean saveCategory(Category category, MultipartFile file) throws IOException {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/saveCategory";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/saveCategory";
         System.out.println("Service: " + category.getName());
   String category1= category.getName().replace(" ","");
         // Send the request using RestTemplate, passing the Category object and the file
@@ -94,7 +94,7 @@ public class CommonServiceImpl implements CommonService {
 
     public Boolean deleteCategory(String id){
         System.out.println("Entering delete endpoint...");
-        String url = "https://productcatalog-production.up.railway.app/api/admin/deleteCategory/{id}";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/deleteCategory/{id}";
 
         // Perform a GET request to retrieve the Boolean result from the server
         ResponseEntity<Boolean> responseEntity = restTemplate.exchange(
@@ -112,7 +112,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public Category getCategory(String id) {
         System.out.println("Entering edit endpoint...");
-        String url = "https://productcatalog-production.up.railway.app/api/admin/editCategory/{id}";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/editCategory/{id}";
         ResponseEntity<Category> responseEntity = restTemplate.exchange(
                 url,
                 HttpMethod.GET,  // or HttpMethod.DELETE based on your endpoint design
@@ -129,7 +129,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public boolean updateCategory(Category category) {
         // The URL for the update request to the external API
-        String url = "https://productcatalog-production.up.railway.app/api/admin/updateCategory";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/updateCategory";
 
         // Create HttpHeaders for form submission
         HttpHeaders headers = new HttpHeaders();
@@ -159,7 +159,7 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public List<Category> getAllActiveCategory() {
-        String url = "https://productcatalog-production.up.railway.app/api/admin/getAllActiveCategory";
+        String url = System.getenv("PRODUCT_SERVICE") + "/api/admin/getAllActiveCategory";
 
         // Use ParameterizedTypeReference to capture the response as List<Category>
         ResponseEntity<List<Category>> responseEntity = restTemplate.exchange(
