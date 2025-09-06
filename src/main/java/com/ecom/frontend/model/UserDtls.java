@@ -43,9 +43,9 @@ public class UserDtls {
 
     private String role;
 
-    private Boolean isEnable;
+    private Boolean isEnable=true;
 
-    private Boolean accountNonLocked;
+    private Boolean accountNonLocked=false;
 
     private Integer failedAttempt;
 
