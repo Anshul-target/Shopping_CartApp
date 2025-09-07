@@ -16,11 +16,10 @@
 
 	<properties>
 		<java.version>17</java.version>
-		<spring-cloud.version>2023.0.0</spring-cloud.version> <!-- Updated -->
+		<spring-cloud.version>2023.0.0</spring-cloud.version>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
-
 
 	<dependencies>
 		<dependency>
@@ -28,10 +27,11 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+		<!-- FIXED: Updated Lombok version -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.28</version>
+			<version>1.18.30</version> <!-- Updated from 1.18.28 -->
 			<scope>provided</scope>
 		</dependency>
 
@@ -45,26 +45,19 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- Uncomment for MongoDB
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-        </dependency>
-        -->
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-<!--Spring Security-->
+		<!-- Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-<!--		-->
 
-<!--Mail Sender	-->
+		<!-- Mail Sender -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
@@ -76,31 +69,7 @@
 			<scope>test</scope>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-devtools</artifactId>-->
-<!--			<scope>runtime</scope>-->
-<!--			<optional>true</optional>-->
-<!--		</dependency>-->
-
-
-<!--		aws sdk-->
-<!--		<dependency>-->
-<!--			<groupId>software.amazon.awssdk</groupId>-->
-<!--			<artifactId>s3</artifactId>-->
-<!--			<version>2.20.7</version>  &lt;!&ndash; Use the latest version &ndash;&gt;-->
-<!--		</dependency>-->
-
-		<!--		spring boot Actuator-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-actuator</artifactId>-->
-<!--		</dependency>-->
-
-<!--		Eureka Client-->
-
-
-<!--config  -->
+		<!-- Config -->
 		<dependency>
 			<groupId>io.github.cdimascio</groupId>
 			<artifactId>dotenv-java</artifactId>
@@ -112,11 +81,9 @@
 			<artifactId>cloudinary-http44</artifactId>
 			<version>1.37.0</version>
 		</dependency>
-
 	</dependencies>
 
-<!--	Eureka CLoud-->
-
+	<!-- Spring Cloud Dependencies -->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -129,7 +96,7 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<!-- Add production profile -->
+	<!-- Production profile -->
 	<profiles>
 		<profile>
 			<id>production</id>
@@ -141,11 +108,7 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-
+			<!-- FIXED: Added annotation processor configuration -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -153,6 +116,27 @@
 				<configuration>
 					<source>17</source>
 					<target>17</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.30</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+
+			<!-- FIXED: Added Lombok exclusion -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>
